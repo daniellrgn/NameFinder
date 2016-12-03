@@ -40,8 +40,21 @@ public class NameFinder{
           System.exit(3);
         }
       }
-
-      if (type == 3){
+      if (type == 1){
+        System.out.println("Selected Data Structure: Tree");
+        if (method == 1){
+          Structure.searchNameTree(name);
+        }
+        else if (method == 2){
+          Structure.mostPopularNameTree();
+        }
+        else if (method == 3){
+          Structure.uniqueNameTree();
+        }
+        else{
+          Structure.displayNameTree();
+        }
+      } else if (type == 3){
         System.out.println("Selected Data Structure: Linked List");
         if (method == 1){
           Structure.searchNameList(name);
