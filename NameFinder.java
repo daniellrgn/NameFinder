@@ -54,7 +54,23 @@ public class NameFinder{
         else{
           Structure.displayNameTree();
         }
-      } else if (type == 3){
+        
+        else if (type == 2){
+        System.out.println("Selected Data Structure: HashMap");
+        if (method == 1){
+          Structure.searchNameHash(name);
+        }
+        else if (method == 2){
+          Structure.mostPopularNameHash();
+        }
+        else if (method == 3){
+          Structure.uniqueNameHash();
+        }
+        else{
+          Structure.displayNameHash();
+        }
+        
+      } else{
         System.out.println("Selected Data Structure: Linked List");
         if (method == 1){
           Structure.searchNameList(name);
