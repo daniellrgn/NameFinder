@@ -14,6 +14,18 @@ public class Structures{
   private Tree femaleFreqTree;
   private static int totalMales;
   private static int totalFemales;
+  
+  
+  static Map<String, NameNode> namesMale;
+  static Map<String, NameNode> namesFemale;
+  static int rank;
+  static int sum;
+  static String yob;
+  static NameNode temp;
+  static NameNode temp2;
+  static int topM = 10;
+  static int topF = 0;
+  static NameNode[] mostPop = new NameNode[20];
 
   Structures(){
     maleList = new LinkedList<Name>();
@@ -21,6 +33,9 @@ public class Structures{
     alphaTree = new Tree();
     maleFreqTree = new Tree();
     femaleFreqTree = new Tree();
+    namesMale = new HashMap<String, NameNode>();
+    namesFemale = new HashMap<String, NameNode>();
+    sum = 0;
     totalMales = 0;
     totalFemales = 0;
   }
@@ -514,6 +529,231 @@ public class Structures{
       }
       alphaInOrder(t, z.right);
     }
+    //============================================================================
+    //NameNode, nodes i used for hashmap
+    
+    public class NameNode {
 
+    private String name;
+    private String sex;
+    private int occur;
+    private int rank;
+    
+    public NameNode(String name, int occur, int rank, String sex){
+    
+    this.name = name;
+    this.occur = occur;
+    this.rank = rank;
+    this.sex = sex;
+    }
+    public String getName(){
+        return name;
+    }
+    public String getSex(){
+        return sex;
+    }
+    
+    public int getRank(){
+        return rank;
+    }
+    public int getOccur(){
+        return occur;
+    }
+
+    }
+    
+        //============================================================================
+      //HashMap Class/Functionality
+    public static void loadHash(String file){
+    
+        Map<String, NameNode> names = new HashMap<String, NameNode>();
+        NameNode temp;
+        Scanner input = null;
+        String[] fields = new String[3];
+        String curLine;
+        
+        yob = file.substring(3,7);
+        
+        
+        try
+          {
+            input = new Scanner(new File(file));
+          }
+          catch (FileNotFoundException ex) 
+          {
+          
+            System.out.println("Error: File " + file + " not found. Exiting program.");
+            System.exit(1);
+          }
+         
+         while(input.hasNext())
+         {
+            rank += 1;
+            curLine = input.next();
+            fields = curLine.split(",");
+            sum += (Integer.parseInt(fields[2]));
+            
+            temp = new NameNode(fields[0], Integer.parseInt(fields[2]), rank, fields[1]);
+            
+            if(fields[1].equals("F"))
+            {
+               namesFemale.put(fields[0], temp);
+               totalFemales += (Integer.parseInt(fields[2]));
+               
+               if( topF != 10 ){
+                  mostPop[topF] = temp;
+                  topF++;
+               }
+            }
+            else
+            {
+               namesMale.put(fields[0], temp);
+               totalMales += (Integer.parseInt(fields[2]));
+
+               
+               if( topM != 20 ){
+                  mostPop[topM] = temp;
+                  topM++;
+               }
+            }
+            
+         }
+        
+        
+    }
+    
+    public static void searchNameHash( String name ) 
+    {
+        
+        System.out.println("Selected data structure: HashMap");
+        System.out.println("Year: " + yob );
+        
+         if(namesMale.containsKey(name))
+         {
+            temp = namesMale.get(name);
+            System.out.printf("%-15s%-15s%-15s%-15s%n","Male",      "Male-Rank",     "Female",    "Rank-Female");
+            System.out.printf("%-15s%-15s" ,Integer.toString(temp.getOccur()), Integer.toString(temp.getRank()) );
+            if(namesFemale.containsKey(name))
+            {
+                temp2 = namesFemale.get(name);
+                System.out.printf("%-15s%-15s%n",Integer.toString(temp2.getOccur()), Integer.toString(temp2.getRank()));
+                
+            }
+            else
+            {
+                System.out.printf("%-15s%-15s%n", "0", "N/A");
+                
+            }
+            
+            
+         }
+         
+         else if(namesFemale.containsKey(name))
+         {
+            temp = namesFemale.get(name);
+            System.out.printf("%-15s%-15s%-15s%-15s%n" ,"Male" ,"Male-Rank" ,"Female" ,"Rank-Female");
+            System.out.printf("%-15s%-15s","0","N/A");
+            System.out.print(Integer.toString(temp.getOccur()) + "      " + Integer.toString(temp.getRank()));
+            
+         }
+         else
+         {
+            System.out.println("No information ragarding this name found.");
+         }
+    }
+    
+    public static void mostPopularNameHash()
+    {
+        int n = 0;
+        System.out.println("Selected data structure: HashMap");
+        System.out.println();
+        System.out.println("Year: " + yob);
+        System.out.println();
+        System.out.printf("%-15s%-15s%-15s%n", "Female Name", "Frequency", "%"); 
+        System.out.println();       
+        
+        for(int i = 0 ; i < 10; i++){
+         
+         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalFemales*1000);
+         
+        
+        }
+        System.out.println();
+        System.out.printf("%-15s%-15s%-15s%n", "Male Name", "Frequency", "%");
+        System.out.println(); 
+        for(int i = 10 ; i < 20; i++){
+         
+         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalMales*1000);
+         
+        
+        }
+        
+    }
+    public static void uniqueNameHash()
+    {   
+        System.out.printf("%-15s%-15s%-15s%n", "Male Name", "Frequency", "%");
+        Map<String, NameNode> uniqueM = new HashMap<String, NameNode>();
+        
+        int var = 0;
+        
+        Iterator it = namesMale.entrySet().iterator();
+        Iterator it2 = namesFemale.entrySet().iterator();
+        
+        for(int i = 0; i < 5; i++){
+            
+            Map.Entry<String,NameNode> pair = (Map.Entry)it.next();
+            uniqueM.put(pair.getKey(), pair.getValue());
+            System.out.printf("%-15s%-15d%-15s%n", pair.getValue().getName(), pair.getValue().getOccur(), (double)pair.getValue().getOccur()/(double)totalMales*100 + "%" );
+        }
+        System.out.printf("%-15s%-15s%-15s%n", "Female Name", "Frequency", "%");
+        while(var < 5){
+            
+            Map.Entry<String, NameNode> pair2 = (Map.Entry)it2.next();
+            while(uniqueM.containsKey(pair2.getKey())){
+               
+               pair2 = (Map.Entry)it.next();
+            }
+            System.out.printf("%-15s%-15d%-15s%n", pair2.getValue().getName(), pair2.getValue().getOccur(),(double)pair2.getValue().getOccur()/(double)totalFemales*100 + "%");
+            var++;
+        } 
+      
+    }
+    
+    public static void displayNameHash(){
+        
+         HashMap<String, NameNode> tempMap = new HashMap<String, NameNode>();
+
+         tempMap.putAll(namesMale);
+         tempMap.putAll(namesFemale);
+         
+         Map<String, NameNode> nameSort = new TreeMap<String, NameNode>(tempMap);
+         
+         
+         for(Map.Entry<String, NameNode> entry : nameSort.entrySet()){
+            String key = entry.getKey();
+            temp = entry.getValue();
+            
+            if( (namesMale.containsKey(key)) && (namesFemale.containsKey(key)) ){
+               
+               temp = namesMale.get(key);
+               temp2 = namesFemale.get(key);
+               int babiesTotal = temp.getOccur()+ temp2.getOccur();
+               
+               System.out.printf("%-15s%-15d%-15s%-15s%n",key ,babiesTotal,"%Male: " + (double)temp.getOccur()/(double)babiesTotal*100, "%Female: " +  (double)temp2.getOccur()/(double)babiesTotal*100);
+            
+            } 
+            else{
+               
+               System.out.printf("%-15s%-15d%-15s%n",key, temp.getOccur(), " 100%" + temp.getSex());
+            
+            }
+            
+     }
+        
+        
+    
+
+}
+    
   }
 }//end Structures
