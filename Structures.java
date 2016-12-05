@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 public class Structures{
-  //============================================================================
-  //LinkedList data structure functions
 
   private LinkedList<Name> maleList;
   private LinkedList<Name> femaleList;
@@ -65,6 +63,9 @@ public class Structures{
     }
   }
 
+  //============================================================================
+  //LinkedList data structure functions
+
   public LinkedList<Name> getMaleList(){
     return maleList;
   }
@@ -73,6 +74,7 @@ public class Structures{
     return femaleList;
   }
 
+  //Load the list and the tree data structures
   public ArrayList<String> loadLists(String nameFile){
     ArrayList<String> allNames = new ArrayList<String>();
     Scanner line = null;
@@ -128,6 +130,7 @@ public class Structures{
     return allNames;
   }
 
+  //Searches for a name and prints its male and female associated data
   public void searchNameList(String name){
     int femaleRank = 0;
     int fRank = 0;
@@ -158,6 +161,7 @@ public class Structures{
     System.out.printf("%-15d%-15d%-15d%-15d%-15d%n", 2014, femaleFreq, femaleRank, maleFreq, maleRank);
     }
 
+  //prints the ten most popular male and female names, and their stats
   public void mostPopularNameList(){
     Name f = null;
     Name m = null;
@@ -175,6 +179,7 @@ public class Structures{
 
   }
 
+  //prints the five least popular male and female names, and their stats
   public void uniqueNameList(){
     Name f = null;
     Name m = null;
@@ -191,6 +196,7 @@ public class Structures{
 
   }
 
+  //displays all names in the list in alphabetical order and their stats
   public void displayNameList(){
     LinkedList<Name> fullList = new LinkedList<Name>();  //adds all names together to be alphabetized
     for (Name n : femaleList){
@@ -200,7 +206,7 @@ public class Structures{
       fullList.add(n);
     }
     Name[] A  = fullList.toArray(new Name[fullList.size()]);
-    Sort(A, 0, fullList.size()-1);  //alphabetize the names
+    Sort(A, 0, fullList.size()-1);  //alphabetizes the names
     LinkedList<Name> displayList = new LinkedList<Name>(Arrays.asList(A));
 
     int f = 0;
@@ -212,7 +218,8 @@ public class Structures{
 
     System.out.printf("%-15s%-15s%-15s%-15s%-15s%n", "Name", "F Frequency", "% Females", "M Frequency", "% Males");
 
-    for (Name next : displayList){     //logic to format names. Looks at next and current
+    //forloop prints names and combines names' data if it appears in both male and female lists
+    for (Name next : displayList){
       if (curr != null){
         if (curr.getName().equals(next.getName())){
           if (next.gender.equals("M")){
@@ -238,7 +245,7 @@ public class Structures{
       curr = next;
     }
   }
-
+  //implementation of quicksort for alphebetizing names
   private static void Sort(Name[] A, int p, int r){
     if (p < r){
       int q = PARTITION(A,p,r);
@@ -269,7 +276,7 @@ public class Structures{
   //============================================================================
   //tree data structure class/functions
 
-  //start tree class
+  //class for Tree's nodes
   public class TreeNode{
       public Name data;
       public int color;
@@ -294,6 +301,7 @@ public class Structures{
       }
     }
 
+  //class for Tree structure (RedBlack Tree balancing)
   public class Tree{
     public TreeNode nilNode = new TreeNode();
     public TreeNode root = nilNode;
@@ -304,8 +312,7 @@ public class Structures{
       root.right = nilNode;
     }
 
-    //node class for tree
-
+    //treeFreqInsert and treeAlphaInsert insert data in two sorts, based on Cormen's algorithms
     public void treeFreqInsert(TreeNode z){
       TreeNode y = nilNode;
       TreeNode x = root;
@@ -356,6 +363,7 @@ public class Structures{
       this.insert_Fixup(z);
     }
 
+    //insert helper function (Cormen)
     private void insert_Fixup(TreeNode z){
       TreeNode y = null;
       while (z.p.color == z.red){
@@ -394,6 +402,7 @@ public class Structures{
       root.color = z.black;
     }
 
+    //rotation helper functions for insert_Fixup (Cormen)
     private void rotate_Right(TreeNode z){
       TreeNode y = z.left;
       z.left = y.right;
@@ -431,10 +440,11 @@ public class Structures{
     }
 
   }
-  //end tree class
-  //============================================================================
+  //end tree classes
+  //========================================================================================================================
   //tree functionality
 
+  //searches tree for a name and returns its stats, male, female, or both
   public void searchNameTree(String name){
     int femaleRank = 0;
     int femaleFreq = 0;
@@ -442,15 +452,14 @@ public class Structures{
     int maleFreq = 0;
 
     TreeNode searchNode = alphaTree.root;
-
-    while (!searchNode.equals(alphaTree.nilNode) && !searchNode.data.getName().equals(name)){
+    while (!searchNode.equals(alphaTree.nilNode) && !searchNode.data.getName().equals(name)){ //finds the name
       if (searchNode.data.getName().compareTo(name) >= 0){
         searchNode = searchNode.left;
       } else {
         searchNode = searchNode.right;
       }
     }
-    if (searchNode.data.getName().equals(name)){
+    if (searchNode.data.getName().equals(name)){ //checks for a duplicate name and adds info together if there is one
         if (searchNode.data.gender.equals("F")){
           femaleRank = searchNode.rank;
           femaleFreq = searchNode.data.getFreq();
@@ -478,11 +487,12 @@ public class Structures{
     System.out.printf("%-15d%-15d%-15d%-15d%-15d%n", 2014, femaleFreq, femaleRank, maleFreq, maleRank);
   }
 
+  //finds the 10 most popular names in the Tree and prints their stats
   public void mostPopularNameTree(){
     ArrayList<Name> femalePops = new ArrayList<Name>();
     ArrayList<Name> malePops = new ArrayList<Name>();
-    mostPopularInOrder(femaleFreqTree, femaleFreqTree.root, femalePops);
-    mostPopularInOrder(maleFreqTree, maleFreqTree.root, malePops);
+    mostPopularInOrder(femaleFreqTree, femaleFreqTree.root, femalePops); //fills the array with 10 names
+    mostPopularInOrder(maleFreqTree, maleFreqTree.root, malePops); //same as above
 
 
     System.out.printf("%-15s%-15s%-15s%-15s%-15s%-15s%n", "Female Name", "Frequency", "%", "Male Name", "Frequency", "%");
@@ -498,7 +508,7 @@ public class Structures{
       System.out.printf("%-15s%-15d%-15s%-15s%-15d%-15s%n", f.getName(), f.getFreq(), fPercent+"%", m.getName(), m.getFreq(), mPercent+"%");
     }
   }
-
+  //helper for mostPopularNameTree
   private static void mostPopularInOrder(Tree t, TreeNode z, ArrayList<Name> nodeList){
     if (!z.equals(t.nilNode) && nodeList.size() <= 10){
       mostPopularInOrder(t, z.right, nodeList);
@@ -506,11 +516,11 @@ public class Structures{
       mostPopularInOrder(t, z.left, nodeList);
     }
   }
-
+  //finds and prints data for five least popular names
   public void uniqueNameTree(){
     ArrayList<Name> femaleUnis = new ArrayList<Name>();
     ArrayList<Name> maleUnis = new ArrayList<Name>();
-    uniqueNameInOrder(femaleFreqTree, femaleFreqTree.root, femaleUnis);
+    uniqueNameInOrder(femaleFreqTree, femaleFreqTree.root, femaleUnis); //uses same strategy as mostPopularNameTree
     uniqueNameInOrder(maleFreqTree, maleFreqTree.root, maleUnis);
 
 
@@ -527,7 +537,7 @@ public class Structures{
       System.out.printf("%-15s%-15d%-15s%-15s%-15d%-15s%n", f.getName(), f.getFreq(), fPercent+"%", m.getName(), m.getFreq(), mPercent+"%");
     }
   }
-
+  //helper function for uniqueNameTree
   private static void uniqueNameInOrder(Tree t, TreeNode z, ArrayList<Name> nodeList){
     if (!z.equals(t.nilNode) && nodeList.size() <= 5){
       uniqueNameInOrder(t, z.left, nodeList);
@@ -535,7 +545,7 @@ public class Structures{
       uniqueNameInOrder(t, z.right, nodeList);
     }
   }
-
+  //display all names in alphebetical order with their stats for both genders
   public void displayNameTree(){
     System.out.printf("%-15s%-15s%-15s%-15s%-15s%n", "Name", "F Frequency", "% Females", "M Frequency", "% Males");
     alphaInOrder(alphaTree, alphaTree.root);
@@ -552,9 +562,9 @@ public class Structures{
 
       alphaInOrder(t, z.left);
 
-      if (!z.p.equals(t.nilNode) && !z.p.data.getName().equals(z.data.getName())){
+      if (!z.p.equals(t.nilNode) && !z.p.data.getName().equals(z.data.getName())){ //case for unique name data, skips over the second instance of a name found
         name = z.data.getName();
-        if (z.data.gender.equals("F")){
+        if (z.data.gender.equals("F")){ //cases for assigning gendered data
           fFreq = z.data.getFreq();
           fPercent = (fFreq * 100)/totalFemales;
           if (!z.right.equals(t.nilNode) && z.right.data.getName().equals(z.data.getName())){
@@ -576,7 +586,7 @@ public class Structures{
     }
 
   }
-
+  //testing function to visualize trees
   public static void printInOrder(Tree t, TreeNode z){
     if (!z.equals(t.nilNode)){
       printInOrder(t, z.left);
@@ -584,8 +594,8 @@ public class Structures{
       printInOrder(t, z.right);
     }
   }
-
-    //============================================================================
+    //end tree functionality
+    //======================================================================================================================
     //NameNode, nodes i used for hashmap
 
   public class NameNode {
@@ -618,7 +628,7 @@ public class Structures{
 
     }
 
-        //============================================================================
+        //==================================================================================================================
       //HashMap Class/Functionality
     public void loadHash(String file){
 
