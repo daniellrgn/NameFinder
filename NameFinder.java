@@ -14,6 +14,7 @@ public class NameFinder{
     Structures Structure = new Structures();
     System.out.println("Loading...");
     ArrayList<String> allNames = Structure.loadLists(nameFile);
+    Structure.loadHash(nameFile);
     String struct = "";
     String name = "";
 
@@ -55,7 +56,7 @@ public class NameFinder{
           Structure.displayNameTree();
         }
         
-        else if (type == 2){
+      }else if (type == 2){
         System.out.println("Selected Data Structure: HashMap");
         if (method == 1){
           Structure.searchNameHash(name);
