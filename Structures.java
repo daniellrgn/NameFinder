@@ -737,7 +737,7 @@ public class Structures{
 
         for(int i = 0 ; i < 10; i++){
 
-         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalFemales*1000);
+         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalFemales*100);
 
 
         }
@@ -746,7 +746,7 @@ public class Structures{
         System.out.println();
         for(int i = 10 ; i < 20; i++){
 
-         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalMales*1000);
+         System.out.printf("%-15s%-15d%-15s%n", mostPop[i].getName(), mostPop[i].getOccur(), " %" + (double)mostPop[i].getOccur()/(double)totalMales*100);
 
 
         }
